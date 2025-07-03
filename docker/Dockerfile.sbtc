@@ -1,46 +1,50 @@
-# Dockerfile to install Orbit + Isaac Sim, with conda as the default env.
-#
-# Written by Özhan Özen, SBTC, Switzerland Innovation Park Biel/Bienne.
+#################################################################
+# Copyright (c) 2024 SBTC Switzerland Innovation Park Biel Bienne
+# Author: Özhan Özen
+# Email: oezhan.oezen@sipbb.ch, sbtc@sipbb.ch
+# Created: 2024-06-04
+#################################################################
 
+# Dockerfile to install IsaacLab + Isaac Sim + IsaacLabEureka.
 
-# Extend from the base Orbit image
-FROM orbit-base AS orbit-sbtc
+# Extend from the base IsaacLab image
+FROM isaac-lab-base AS isaac-lab-sbtc
 
-ARG DOCKER_ORBIT_PATH
+ARG ISAACLAB_PATH_ARG
+ENV ISAACLAB_PATH=${ISAACLAB_PATH_ARG}
 
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install wget
+RUN apt-get update
 
-# Install Miniconda and configure the environment
-RUN DEBIAN_FRONTEND=noninteractive \
-    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-    bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda && \
-    rm Miniconda3-latest-Linux-x86_64.sh && \
-    /opt/miniconda/bin/conda init bash
+RUN DEBIAN_FRONTEND=noninteractive ${ISAACLAB_PATH}/isaaclab.sh -p -m pip install --upgrade pip && \
+    DEBIAN_FRONTEND=noninteractive  ${ISAACLAB_PATH}/isaaclab.sh -p -m pip install torch-tb-profiler
 
-ENV PATH="/opt/miniconda/bin:$PATH"
-RUN conda update -n base -c defaults conda
+WORKDIR ${ISAACLAB_PATH}/
 
-# Activate Orbit conda environment and run setup scripts
-RUN --mount=type=cache,target=/opt/miniconda/pkgs \
-    DEBIAN_FRONTEND=noninteractive ${DOCKER_ORBIT_PATH}/orbit.sh --conda
+# Install Isaac Lab Eureka
+COPY IsaacLabEureka/ ${ISAACLAB_PATH}/../IsaacLabEureka/
+RUN ln -sf ${ISAACLAB_PATH}/../IsaacLabEureka ${ISAACLAB_PATH}/_isaaclab_eureka
+RUN DEBIAN_FRONTEND=noninteractive ${ISAACLAB_PATH}/isaaclab.sh -p -m pip install -e ${ISAACLAB_PATH}/_isaaclab_eureka/source/isaaclab_eureka
 
-RUN echo "conda deactivate && conda activate orbit" >> ${HOME}/.bashrc
+# Install Ray
+RUN DEBIAN_FRONTEND=noninteractive apt-get install wget
+ENV PATH="/usr/local/nvidia/bin:$PATH"
+ENV LD_LIBRARY_PATH="/usr/local/nvidia/lib64"
+RUN ln -sf /usr/local/nvidia/bin/nvidia* /usr/bin
+RUN DEBIAN_FRONTEND=noninteractive ${ISAACLAB_PATH}/isaaclab.sh -p -m pip install "ray[default, tune]"==2.31.0 && \
+    sed -i "1i #!${ISAACLAB_PATH}/_isaac_sim/python.sh" ${ISAACLAB_PATH}/_isaac_sim/kit/python/bin/ray && \
+    ln -s ${ISAACLAB_PATH}/_isaac_sim/kit/python/bin/ray /usr/local/bin/ray
+RUN DEBIAN_FRONTEND=noninteractive ${ISAACLAB_PATH}/isaaclab.sh -p -m pip install optuna bayesian-optimization mlflow
 
-SHELL ["/opt/miniconda/bin/conda", "run", "-n", "orbit", "/bin/bash", "-c"]
-
-RUN DEBIAN_FRONTEND=noninteractive \
-    ${DOCKER_ORBIT_PATH}/orbit.sh --install && \
-    ${DOCKER_ORBIT_PATH}/orbit.sh --extra
-
-WORKDIR ${DOCKER_ORBIT_PATH}/
+# Add symbolic links
+RUN echo 'source ${ISAACLAB_PATH}/_isaaclab_eureka/api_keys/api_key_importer.sh' >> ${HOME}/.bashrc
+RUN echo "export LIVESTREAM=0" >> ${HOME}/.bashrc
+RUN echo "export HEADLESS=1" >> ${HOME}/.bashrc
 
 # Copy additional scripts
-COPY docker/sbtc/bash_scripts/runisaac.sh ./
+COPY IsaacLab/docker/sbtc/bash_scripts/runisaac.sh ./
 
-# Setup environment and symbolic links
-RUN ln -s "/docs" ${DOCKER_ORBIT_PATH}/_docs && \
-    echo "export LIVESTREAM=3" >> ${HOME}/.bashrc
+# Setup vscode
+RUN DEBIAN_FRONTEND=noninteractive ${ISAACLAB_PATH}/isaaclab.sh -v
 
-# Install packages that do not install correctly during setup
-RUN DEBIAN_FRONTEND=noninteractive ${DOCKER_ORBIT_PATH}/_isaac_sim/python.sh -m pip install psutil && \
-    pip install torch-tb-profiler
+# Install tmux
+RUN apt-get install -y tmux

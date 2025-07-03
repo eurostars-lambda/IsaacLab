@@ -1,29 +1,59 @@
-Overview
-========
+Welcome to Isaac Lab!
+=====================
 
-**Orbit** is a unified and modular framework for robot learning that aims to simplify common workflows
-in robotics research (such as RL, learning from demonstrations, and motion planning). It is built upon
+.. figure:: source/_static/isaaclab.jpg
+   :width: 100%
+   :alt: H1 Humanoid example using Isaac Lab
+
+**Isaac Lab** is a unified and modular framework for robot learning that aims to simplify common workflows
+in robotics research (such as reinforcement learning, learning from demonstrations, and motion planning). It is built on
 `NVIDIA Isaac Sim`_ to leverage the latest simulation capabilities for photo-realistic scenes, and fast
-and efficient simulation. The core objectives of the framework are:
+and efficient simulation.
+
+The core objectives of the framework are:
 
 - **Modularity**: Easily customize and add new environments, robots, and sensors.
 - **Agility**: Adapt to the changing needs of the community.
 - **Openness**: Remain open-sourced to allow the community to contribute and extend the framework.
-- **Battery-included**: Include a number of environments, sensors, and tasks that are ready to use.
+- **Batteries-included**: Include a number of environments, sensors, and tasks that are ready to use.
+
+Key features available in Isaac Lab include fast and accurate physics simulation provided by PhysX,
+tiled rendering APIs for vectorized rendering, domain randomization for improving robustness and adaptability,
+and support for running in the cloud.
+
+Additionally, Isaac Lab provides a variety of environments, and we are actively working on adding more environments
+to the list. These include classic control tasks, fixed-arm and dexterous manipulation tasks, legged locomotion tasks,
+and navigation tasks. A complete list is available in the `environments <source/overview/environments>`_ section.
+
+Isaac lab is developed with specific robot assets that are now **Batteries-included** as part of the platform and are ready to learn! These robots include...
+
+- **Classic** Cartpole, Humanoid, Ant
+- **Fixed-Arm and Hands**: UR10, Franka, Allegro, Shadow Hand
+- **Quadrupeds**: Anybotics Anymal-B, Anymal-C, Anymal-D, Unitree A1, Unitree Go1, Unitree Go2, Boston Dynamics Spot
+- **Humanoids**: Unitree H1, Unitree G1
+- **Quadcopter**: Crazyflie
+
+The platform is also designed so that you can add your own robots! please refer to the
+:ref:`how-to` section for details.
 
 For more information about the framework, please refer to the `paper <https://arxiv.org/abs/2301.04195>`_
 :cite:`mittal2023orbit`. For clarifications on NVIDIA Isaac ecosystem, please check out the
-:doc:`/source/setup/faq` section.
+:ref:`isaac-lab-ecosystem` section.
 
 .. figure:: source/_static/tasks.jpg
    :width: 100%
-   :alt: Example tasks created using orbit
+   :alt: Example tasks created using Isaac Lab
 
 
-Citing
-======
+License
+=======
 
-If you use Orbit in your research, please use the following BibTeX entry:
+The Isaac Lab framework is open-sourced under the BSD-3-Clause license.
+Please refer to :ref:`license` for more details.
+
+Acknowledgement
+===============
+Isaac Lab development initiated from the `Orbit <https://isaac-orbit.github.io/>`_ framework. We would appreciate if you would cite it in academic publications as well:
 
 .. code:: bibtex
 
@@ -39,43 +69,70 @@ If you use Orbit in your research, please use the following BibTeX entry:
    }
 
 
-License
-=======
-
-NVIDIA Isaac Sim is provided under the NVIDIA End User License Agreement. However, the
-Orbit framework is open-sourced under the BSD-3-Clause license.
-Please refer to :ref:`license` for more details.
-
-
 Table of Contents
 =================
 
 .. toctree::
    :maxdepth: 2
-   :caption: Getting Started
+   :caption: Isaac Lab
 
-   source/setup/installation
-   source/setup/developer
-   source/setup/sample
-   source/setup/template
-   source/setup/faq
+   source/setup/ecosystem
+   source/setup/installation/index
+   source/setup/installation/cloud_installation
+   source/refs/reference_architecture/index
+
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Getting Started
+   :titlesonly:
+
+   source/setup/quickstart
+   source/setup/walkthrough/index
+   source/tutorials/index
+   source/how-to/index
+   source/overview/developer-guide/index
+
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Overview
+   :titlesonly:
+
+
+   source/overview/core-concepts/index
+   source/overview/environments
+   source/overview/reinforcement-learning/index
+   source/overview/teleop_imitation
+   source/overview/showroom
+   source/overview/simple_agents
 
 .. toctree::
    :maxdepth: 2
    :caption: Features
 
-   source/features/environments
-   source/features/actuators
-   .. source/features/motion_generators
+   source/features/hydra
+   source/features/multi_gpu
+   Tiled Rendering</source/overview/core-concepts/sensors/camera>
+   source/features/ray
+   source/features/reproducibility
 
 .. toctree::
    :maxdepth: 1
    :caption: Resources
    :titlesonly:
 
-   source/tutorials/index
-   source/how-to/index
    source/deployment/index
+   source/policy_deployment/index
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Migration Guides
+   :titlesonly:
+
+   source/migration/migrating_from_isaacgymenvs
+   source/migration/migrating_from_omniisaacgymenvs
+   source/migration/migrating_from_orbit
 
 .. toctree::
    :maxdepth: 1
@@ -87,10 +144,13 @@ Table of Contents
    :maxdepth: 1
    :caption: References
 
-   source/refs/migration
+
+   source/refs/additional_resources
    source/refs/contributing
    source/refs/troubleshooting
+   source/refs/migration
    source/refs/issues
+   source/refs/release_notes
    source/refs/changelog
    source/refs/license
    source/refs/bibliography
@@ -99,7 +159,9 @@ Table of Contents
     :hidden:
     :caption: Project Links
 
-    GitHub <https://github.com/NVIDIA-Omniverse/orbit>
+    GitHub <https://github.com/isaac-sim/IsaacLab>
+    NVIDIA Isaac Sim <https://docs.isaacsim.omniverse.nvidia.com/latest/index.html>
+    NVIDIA PhysX <https://nvidia-omniverse.github.io/PhysX/physx/5.4.1/index.html>
 
 Indices and tables
 ==================
@@ -108,4 +170,4 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
-.. _NVIDIA Isaac Sim: https://docs.omniverse.nvidia.com/app_isaacsim/app_isaacsim/overview.html
+.. _NVIDIA Isaac Sim: https://docs.isaacsim.omniverse.nvidia.com/latest/index.html

@@ -1,4 +1,9 @@
 {
+    "files.exclude": {
+        "**/.mypy_cache": true,
+        "**/__pycache__": true,
+        "**/*.egg-info": true
+    },
     "files.associations": {
         "*.tpp": "cpp",
         "*.kit": "toml",
@@ -40,7 +45,6 @@
         "teleoperation",
         "xform",
         "numpy",
-        "tensordict",
         "flatcache",
         "physx",
         "dpad",
@@ -51,7 +55,9 @@
         "arange",
         "discretization",
         "trimesh",
-        "uninstanceable"
+        "uninstanceable",
+        "coeff",
+        "prestartup"
     ],
     // This enables python language server. Seems to work slightly better than jedi:
     "python.languageServer": "Pylance",
@@ -68,8 +74,9 @@
     "autoDocstring.docstringFormat": "google",
     "autoDocstring.guessTypes": true,
     // Python environment path
-    "python.defaultInterpreterPath": "${workspaceFolder}/_isaac_sim/kit/python/bin/python3",
-    "python.envFile": "${workspaceFolder}/.vscode/.python.env",
+    // note: the default interpreter is overridden when user selects a workspace interpreter
+    //     in the status bar. For example, the virtual environment python interpreter
+    "python.defaultInterpreterPath": "${workspaceFolder}/_isaac_sim/python.sh",
     // ROS distribution
     "ros.distro": "noetic",
     // Language specific settings
@@ -80,6 +87,6 @@
         "editor.tabSize": 2
     },
     // Python extra paths
-    // Note: this is filled up when "./orbit.sh -i" is run
+    // Note: this is filled up when "./isaaclab.sh -i" is run
     "python.analysis.extraPaths": []
 }

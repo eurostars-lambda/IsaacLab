@@ -1,17 +1,17 @@
 API Reference
 =============
 
-This page gives an overview of all the modules and classes in the Orbit extensions.
+This page gives an overview of all the modules and classes in the Isaac Lab extensions.
 
-omni.isaac.orbit extension
---------------------------
+isaaclab extension
+------------------
 
-The following modules are available in the ``omni.isaac.orbit`` extension:
+The following modules are available in the ``isaaclab`` extension:
 
-.. currentmodule:: omni.isaac.orbit
+.. currentmodule:: isaaclab
 
 .. autosummary::
-   :toctree: orbit
+   :toctree: lab
 
    app
    actuators
@@ -30,28 +30,52 @@ The following modules are available in the ``omni.isaac.orbit`` extension:
 .. toctree::
    :hidden:
 
-   orbit/omni.isaac.orbit.envs.mdp
-   orbit/omni.isaac.orbit.envs.ui
-   orbit/omni.isaac.orbit.sensors.patterns
-   orbit/omni.isaac.orbit.sim.converters
-   orbit/omni.isaac.orbit.sim.schemas
-   orbit/omni.isaac.orbit.sim.spawners
+   lab/isaaclab.envs.mdp
+   lab/isaaclab.envs.ui
+   lab/isaaclab.sensors.patterns
+   lab/isaaclab.sim.converters
+   lab/isaaclab.sim.schemas
+   lab/isaaclab.sim.spawners
 
-omni.isaac.orbit_tasks extension
---------------------------------
 
-The following modules are available in the ``omni.isaac.orbit_tasks`` extension:
+isaaclab_rl extension
+---------------------
 
-.. currentmodule:: omni.isaac.orbit_tasks
+The following wrappers are available in the ``isaaclab_rl`` extension:
 
-.. autosummary::
-   :toctree: orbit_tasks
-
-   utils
-
+.. currentmodule:: isaaclab_rl
 
 .. toctree::
-   :hidden:
+   :maxdepth: 2
 
-   orbit_tasks/omni.isaac.orbit_tasks.utils.wrappers
-   orbit_tasks/omni.isaac.orbit_tasks.utils.data_collector
+   lab_rl/isaaclab_rl
+
+
+isaaclab_mimic extension
+------------------------
+
+The following modules are available in the ``isaaclab_mimic`` extension:
+
+.. currentmodule:: isaaclab_mimic
+
+.. autosummary::
+   :toctree: lab_mimic
+
+   datagen
+   envs
+
+
+isaaclab_tasks extension
+------------------------
+
+This package ``isaaclab_tasks`` contains the tasks that are available in the Isaac Lab.
+For more information, please refer to the :ref:`environments`.
+
+It includes the following modules:
+
+.. currentmodule:: isaaclab_tasks
+
+.. autosummary::
+   :toctree: lab_tasks
+
+   utils

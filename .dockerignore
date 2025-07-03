@@ -4,6 +4,8 @@
 .gitignore
 # ignore docs
 docs/
+# copy in licenses folder to the container
+!docs/licenses/
 # ignore logs
 **/logs/
 **/runs/
@@ -12,8 +14,8 @@ docs/
 **/videos/*
 *.tmp
 # ignore docker
-docker/exports/
-docker/.container.yaml
+docker/cluster/exports/
+docker/.container.cfg
 # ignore recordings
 recordings/
 # ignore __pycache__
@@ -21,3 +23,7 @@ recordings/
 **/*.egg-info/
 # ignore isaac sim symlink
 _isaac_sim?
+# Docker history
+docker/.isaac-lab-docker-history
+# SBTC: ignore isaaclab eureka symlink
+_isaaclab_eureka

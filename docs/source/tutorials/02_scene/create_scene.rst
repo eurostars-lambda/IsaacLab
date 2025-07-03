@@ -3,7 +3,7 @@
 Using the Interactive Scene
 ===========================
 
-.. currentmodule:: omni.isaac.orbit
+.. currentmodule:: isaaclab
 
 So far in the tutorials, we manually spawned assets into the simulation and created
 object instances to interact with them. However, as the complexity of the scene
@@ -33,12 +33,12 @@ The Code
 ~~~~~~~~
 
 This tutorial corresponds to the ``create_scene.py`` script within
-``orbit/source/standalone/tutorials/02_scene``.
+``scripts/tutorials/02_scene``.
 
 .. dropdown:: Code for create_scene.py
    :icon: code
 
-   .. literalinclude:: ../../../../source/standalone/tutorials/02_scene/create_scene.py
+   .. literalinclude:: ../../../../scripts/tutorials/02_scene/create_scene.py
       :language: python
       :emphasize-lines: 50-63, 68-70, 91-92, 99-100, 105-106, 116-118
       :linenos:
@@ -61,7 +61,7 @@ to create the scene.
 For the cartpole example, we specify the same scene as in the previous tutorial, but list
 them now in the configuration class :class:`CartpoleSceneCfg` instead of manually spawning them.
 
-.. literalinclude:: ../../../../source/standalone/tutorials/02_scene/create_scene.py
+.. literalinclude:: ../../../../scripts/tutorials/02_scene/create_scene.py
    :language: python
    :pyobject: CartpoleSceneCfg
 
@@ -106,7 +106,7 @@ object to its constructor. While creating the configuration instance of ``Cartpo
 we specify how many environment copies we want to create using the ``num_envs`` argument.
 This will be used to clone the scene for each environment.
 
-.. literalinclude:: ../../../../source/standalone/tutorials/02_scene/create_scene.py
+.. literalinclude:: ../../../../scripts/tutorials/02_scene/create_scene.py
    :language: python
    :start-at: # Design scene
    :end-at: scene = InteractiveScene(scene_cfg)
@@ -120,7 +120,7 @@ scene elements can be accessed from the :class:`InteractiveScene` object using t
 entity. The key is specified through the configuration class for each entity. For example,
 the cartpole is specified using the key ``"cartpole"`` in the configuration class.
 
-.. literalinclude:: ../../../../source/standalone/tutorials/02_scene/create_scene.py
+.. literalinclude:: ../../../../scripts/tutorials/02_scene/create_scene.py
    :language: python
    :start-at: # Extract scene entities
    :end-at: robot = scene["cartpole"]
@@ -142,20 +142,28 @@ methods of the entities in the scene.
 The Code Execution
 ~~~~~~~~~~~~~~~~~~
 
+
+
 Let's run the script to simulate 32 cartpoles in the scene. We can do this by passing
 the ``--num_envs`` argument to the script.
 
 .. code-block:: bash
 
-   ./orbit.sh -p source/standalone/tutorials/02_scene/create_scene.py --num_envs 32
+   ./isaaclab.sh -p scripts/tutorials/02_scene/create_scene.py --num_envs 32
 
 This should open a stage with 32 cartpoles swinging around randomly. You can use the
 mouse to rotate the camera and the arrow keys to move around the scene.
+
+
+.. figure:: ../../_static/tutorials/tutorial_creating_a_scene.jpg
+    :align: center
+    :figwidth: 100%
+    :alt: result of create_scene.py
 
 In this tutorial, we saw how to use :class:`scene.InteractiveScene` to create a
 scene with multiple assets. We also saw how to use the ``num_envs`` argument
 to clone the scene for multiple environments.
 
 There are many more example usages of the :class:`scene.InteractiveSceneCfg` in the tasks found
-under the ``omni.isaac.orbit_tasks`` extension. Please check out the source code to see
+under the ``isaaclab_tasks`` extension. Please check out the source code to see
 how they are used for more complex scenes.

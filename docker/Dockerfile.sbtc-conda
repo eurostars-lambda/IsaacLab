@@ -1,0 +1,64 @@
+#################################################################
+# Copyright (c) 2024 SBTC Switzerland Innovation Park Biel Bienne
+# Author: Özhan Özen
+# Email: oezhan.oezen@sipbb.ch, sbtc@sipbb.ch
+# Created: 2024-06-04
+#################################################################
+
+# Dockerfile to install IsaacLab + Isaac Sim + IsaacLabEureka, with conda as the default env.
+
+# Extend from the base IsaacLab image
+FROM isaac-lab-base AS isaac-lab-sbtc-conda
+
+ARG ISAACLAB_PATH_ARG
+ENV ISAACLAB_PATH=${ISAACLAB_PATH_ARG}
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install wget
+
+# Remove these for the moment since they create issues
+RUN DEBIAN_FRONTEND=noninteractive ${ISAACLAB_PATH}/_isaac_sim/python.sh -m pip install --upgrade pip && \
+    ${ISAACLAB_PATH}/_isaac_sim/python.sh -m pip uninstall -y pydantic pydantic-core
+
+# Install Miniconda and configure the environment
+RUN DEBIAN_FRONTEND=noninteractive \
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda && \
+    rm Miniconda3-latest-Linux-x86_64.sh && \
+    /opt/miniconda/bin/conda init bash
+
+ENV PATH="/opt/miniconda/bin:$PATH"
+RUN conda update -n base -c defaults conda
+
+# Activate IsaacLab conda environment and run setup scripts
+RUN --mount=type=cache,target=/opt/miniconda/pkgs \
+    DEBIAN_FRONTEND=noninteractive ${ISAACLAB_PATH}/isaaclab.sh --conda
+
+RUN echo "conda deactivate && conda activate env_isaaclab" >> ${HOME}/.bashrc
+
+SHELL ["/opt/miniconda/bin/conda", "run", "-n", "env_isaaclab", "/bin/bash", "-c"]
+
+# Install back pydantic and pydantic-core
+RUN DEBIAN_FRONTEND=noninteractive ${ISAACLAB_PATH}/isaaclab.sh -p -m pip install pydantic pydantic-core torch-tb-profiler
+
+# Install Isaac Lab
+RUN DEBIAN_FRONTEND=noninteractive ${ISAACLAB_PATH}/isaaclab.sh --install
+
+WORKDIR ${ISAACLAB_PATH}/
+
+# Install Isaac Lab Eureka
+COPY IsaacLabEureka/ ${ISAACLAB_PATH}/../IsaacLabEureka/
+RUN ln -sf ${ISAACLAB_PATH}/../IsaacLabEureka ${ISAACLAB_PATH}/_isaaclab_eureka
+RUN cd ${ISAACLAB_PATH}/_isaaclab_eureka/source/isaaclab_eureka && \
+    DEBIAN_FRONTEND=noninteractive ${ISAACLAB_PATH}/isaaclab.sh -p -m pip install -e .
+
+# Add symbolic links
+RUN echo 'source ${ISAACLAB_PATH}/_isaaclab_eureka/api_keys/api_key_importer.sh' >> ${HOME}/.bashrc
+RUN echo "export LIVESTREAM=2" >> ${HOME}/.bashrc
+
+# Copy additional scripts
+COPY IsaacLab/docker/sbtc/bash_scripts/runisaac.sh ./
+# Fix the missing typing_extensions
+RUN DEBIAN_FRONTEND=noninteractive ${ISAACLAB_PATH}/_isaac_sim/python.sh -m pip install typing_extensions
+
+# Setup vscode
+RUN DEBIAN_FRONTEND=noninteractive ${ISAACLAB_PATH}/isaaclab.sh -v

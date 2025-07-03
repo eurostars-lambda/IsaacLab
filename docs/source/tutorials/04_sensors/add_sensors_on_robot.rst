@@ -3,7 +3,7 @@
 Adding sensors on a robot
 =========================
 
-.. currentmodule:: omni.isaac.orbit
+.. currentmodule:: isaaclab
 
 
 While the asset classes allow us to create and simulate the physical embodiment of the robot,
@@ -30,12 +30,12 @@ The Code
 ~~~~~~~~
 
 The tutorial corresponds to the ``add_sensors_on_robot.py`` script in the
-``orbit/source/standalone/tutorials/04_sensors`` directory.
+``scripts/tutorials/04_sensors`` directory.
 
 .. dropdown:: Code for add_sensors_on_robot.py
    :icon: code
 
-   .. literalinclude:: ../../../../source/standalone/tutorials/04_sensors/add_sensors_on_robot.py
+   .. literalinclude:: ../../../../scripts/tutorials/04_sensors/add_sensors_on_robot.py
       :language: python
       :emphasize-lines: 72-95, 143-153, 167-168
       :linenos:
@@ -83,7 +83,7 @@ set to ``{ENV_REGEX_NS}/Robot/base/front_cam`` where the ``{ENV_REGEX_NS}`` is t
 ``"Robot"`` is the name of the robot, ``"base"`` is the name of the prim to which the camera is attached,
 and ``"front_cam"`` is the name of the prim associated with the camera sensor.
 
-.. literalinclude:: ../../../../source/standalone/tutorials/04_sensors/add_sensors_on_robot.py
+.. literalinclude:: ../../../../scripts/tutorials/04_sensors/add_sensors_on_robot.py
    :language: python
    :start-at: camera = CameraCfg(
    :end-before: height_scanner = RayCasterCfg(
@@ -108,7 +108,7 @@ by setting the :attr:`~sensors.SensorBaseCfg.debug_vis` attribute to true.
 
 The entire configuration of the height-scanner is as follows:
 
-.. literalinclude:: ../../../../source/standalone/tutorials/04_sensors/add_sensors_on_robot.py
+.. literalinclude:: ../../../../scripts/tutorials/04_sensors/add_sensors_on_robot.py
    :language: python
    :start-at: height_scanner = RayCasterCfg(
    :end-before: contact_forces = ContactSensorCfg(
@@ -126,7 +126,7 @@ obtain the contact information. Additional flags can be set to obtain more infor
 the contact, such as the contact air time, contact forces between filtered prims, etc.
 
 In this tutorial, we attach the contact sensor to the feet of the robot. The feet of the robot are
-named ``"LF_FOOT"``, ``"RF_FOOT"``, ``"LH_FOOT"``, and ``"RF_FOOT"``. We pass a Regex expression
+named ``"LF_FOOT"``, ``"RF_FOOT"``, ``"LH_FOOT"``, and ``"RH_FOOT"``. We pass a Regex expression
 ``".*_FOOT"`` to simplify the prim path specification. This Regex expression matches all prims that
 end with ``"_FOOT"``.
 
@@ -137,7 +137,7 @@ simulation steps is stored.
 
 The entire configuration of the contact sensor is as follows:
 
-.. literalinclude:: ../../../../source/standalone/tutorials/04_sensors/add_sensors_on_robot.py
+.. literalinclude:: ../../../../scripts/tutorials/04_sensors/add_sensors_on_robot.py
    :language: python
    :start-at: contact_forces = ContactSensorCfg(
    :lines: 1-3
@@ -148,7 +148,7 @@ Running the simulation loop
 Similar to when using assets, the buffers and physics handles for the sensors are initialized only
 when the simulation is played, i.e., it is important to call ``sim.reset()`` after creating the scene.
 
-.. literalinclude:: ../../../../source/standalone/tutorials/04_sensors/add_sensors_on_robot.py
+.. literalinclude:: ../../../../scripts/tutorials/04_sensors/add_sensors_on_robot.py
    :language: python
    :start-at: # Play the simulator
    :end-at: sim.reset()
@@ -160,7 +160,7 @@ periods.
 The data from the sensors can be accessed through their ``data`` attribute. As an example, we show how
 to access the data for the different sensors created in this tutorial:
 
-.. literalinclude:: ../../../../source/standalone/tutorials/04_sensors/add_sensors_on_robot.py
+.. literalinclude:: ../../../../scripts/tutorials/04_sensors/add_sensors_on_robot.py
    :language: python
    :start-at: # print information from the sensors
    :end-at: print("Received max contact force of: ", torch.max(scene["contact_forces"].data.net_forces_w).item())
@@ -169,11 +169,12 @@ to access the data for the different sensors created in this tutorial:
 The Code Execution
 ~~~~~~~~~~~~~~~~~~
 
+
 Now that we have gone through the code, let's run the script and see the result:
 
 .. code-block:: bash
 
-   ./orbit.sh -p source/standalone/tutorials/04_sensors/add_sensors_on_robot.py --num_envs 2
+   ./isaaclab.sh -p scripts/tutorials/04_sensors/add_sensors_on_robot.py --num_envs 2 --enable_cameras
 
 
 This command should open a stage with a ground plane, lights, and two quadrupedal robots.
@@ -182,23 +183,28 @@ Additionally, you can switch the viewport to the camera view to see the RGB imag
 camera sensor. Please check `here <https://youtu.be/htPbcKkNMPs?feature=shared>`_ for more information
 on how to switch the viewport to the camera view.
 
+.. figure:: ../../_static/tutorials/tutorial_add_sensors. jpg
+    :align: center
+    :figwidth: 100%
+    :alt: result of add_sensors_on_robot.py
+
 To stop the simulation, you can either close the window, or press ``Ctrl+C`` in the terminal.
 
 While in this tutorial, we went over creating and using different sensors, there are many more sensors
 available in the :mod:`sensors` module. We include minimal examples of using these sensors in the
-``source/standalone/tutorials/04_sensors`` directory. For completeness, these scripts can be run using the
+``scripts/tutorials/04_sensors`` directory. For completeness, these scripts can be run using the
 following commands:
 
 .. code-block:: bash
 
    # Frame Transformer
-   ./orbit.sh -p source/standalone/tutorials/04_sensors/run_frame_transformer.py
+   ./isaaclab.sh -p scripts/tutorials/04_sensors/run_frame_transformer.py
 
    # Ray Caster
-   ./orbit.sh -p source/standalone/tutorials/04_sensors/run_ray_caster.py
+   ./isaaclab.sh -p scripts/tutorials/04_sensors/run_ray_caster.py
 
    # Ray Caster Camera
-   ./orbit.sh -p source/standalone/tutorials/04_sensors/run_ray_caster_camera.py
+   ./isaaclab.sh -p scripts/tutorials/04_sensors/run_ray_caster_camera.py
 
    # USD Camera
-   ./orbit.sh -p source/standalone/tutorials/04_sensors/run_usd_camera.py
+   ./isaaclab.sh -p scripts/tutorials/04_sensors/run_usd_camera.py --enable_cameras
